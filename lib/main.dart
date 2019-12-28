@@ -20,7 +20,8 @@ class AppState extends State<App>{
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.pinkAccent,
-        focusColor: Colors.pinkAccent
+        focusColor: Colors.pinkAccent,
+        accentColor: Colors.pinkAccent
       ),
       home: LoginScreen()
     );
@@ -35,7 +36,7 @@ class LoginScreen extends StatefulWidget{
 class LoginScreenState extends State<LoginScreen>{
 
   TextEditingController emailController = new TextEditingController();
-  TextEditingController usernameController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController();
   TextEditingController wordChainController = new TextEditingController();
 
   void _showDialog() {
@@ -147,12 +148,12 @@ class LoginScreenState extends State<LoginScreen>{
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.none,
                       decoration: InputDecoration(
-                        labelText: 'Username',
+                        labelText: 'Name',
                         labelStyle: TextStyle(
                           color: Colors.pinkAccent
                         )
                       ),
-                      controller: usernameController,
+                      controller: nameController,
                     ),
                     SizedBox(height: 12.0),
                     TextField(
@@ -177,11 +178,11 @@ class LoginScreenState extends State<LoginScreen>{
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pinkAccent,
         onPressed: () async{
-          var username = usernameController.text;
+          var name = nameController.text;
           var email = emailController.text;
           var chain = wordChainController.text;
           Map data = {
-            "username": username,
+            "name": name,
             "email": email,
             "chain": chain
           };
