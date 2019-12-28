@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main(){
   runApp(App());
@@ -11,12 +14,6 @@ class App extends StatefulWidget{
 
 class AppState extends State<App>{
 
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController usernameController = new TextEditingController();
-  TextEditingController wordChainController = new TextEditingController();
-
-  bool theme = true;
-
   @override
   Widget build(BuildContext context){
     return MaterialApp(
@@ -25,126 +22,188 @@ class AppState extends State<App>{
         primaryColor: Colors.pinkAccent,
         focusColor: Colors.pinkAccent
       ),
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ClipPath(
-                  clipper: Mclipper(),
-                  child: Container(
-                    height: 370.0,
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(0.0, 10.0),
-                        blurRadius: 10.0)
-                    ]),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          color: Colors.pinkAccent,
-                          width: double.infinity,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 50,
-                            ),
-                            Center(
-                              child: Text(
-                                "Certifiables",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32
-                                )
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Center(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24
-                    )
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30
-                  ),
-                  child: Column(
+      home: LoginScreen()
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget{
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
+
+class LoginScreenState extends State<LoginScreen>{
+
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController wordChainController = new TextEditingController();
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Wrong Credentials"),
+          content: new Text("Wrong credentials entered. Try Again! "),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ClipPath(
+                clipper: Mclipper(),
+                child: Container(
+                  height: 370.0,
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0.0, 10.0),
+                      blurRadius: 10.0)
+                  ]),
+                  child: Stack(
                     children: <Widget>[
-                      TextField(
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        textCapitalization: TextCapitalization.none,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                            color: Colors.pinkAccent
-                          )
-                        ),
-                        controller: emailController,
+                      Container(
+                        color: Colors.pinkAccent,
+                        width: double.infinity,
                       ),
-                      SizedBox(height: 12.0),
-                      TextField(
-                        autocorrect: false,
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.none,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          labelStyle: TextStyle(
-                            color: Colors.pinkAccent
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Center(
+                            child: Text(
+                              "Certifiables",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 32
+                              )
+                            ),
                           )
-                        ),
-                        controller: usernameController,
-                      ),
-                      SizedBox(height: 12.0),
-                      TextField(
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.none,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          labelText: 'Word Chain',
-                          labelStyle: TextStyle(
-                            color: Colors.pinkAccent
-                          )
-                        ),
-                        controller: wordChainController,
+                        ],
                       )
                     ],
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: Text(
+                  "Login",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24
+                  )
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30
+                ),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                          color: Colors.pinkAccent
+                        )
+                      ),
+                      controller: emailController,
+                    ),
+                    SizedBox(height: 12.0),
+                    TextField(
+                      autocorrect: false,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.none,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: TextStyle(
+                          color: Colors.pinkAccent
+                        )
+                      ),
+                      controller: usernameController,
+                    ),
+                    SizedBox(height: 12.0),
+                    TextField(
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.none,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        labelText: 'Word Chain',
+                        labelStyle: TextStyle(
+                          color: Colors.pinkAccent
+                        )
+                      ),
+                      controller: wordChainController,
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.pinkAccent,
-          onPressed: (){},
-          child: Icon(
-            Icons.chevron_right,
-            color: Colors.white,
-          ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.pinkAccent,
+        onPressed: () async{
+          var username = usernameController.text;
+          var email = emailController.text;
+          var chain = wordChainController.text;
+          Map data = {
+            "username": username,
+            "email": email,
+            "chain": chain
+          };
+          var temp = json.encode(data);
+          var url = "http://localhost:8000/gen/";
+          http.post(url, body: temp).then((response){
+            var t = response.body;
+            var jsonResult = json.decode(t.toString());
+            var result = jsonResult["login"];
+            if (result == 'true'){
+              print("Login successful");
+            }
+            else{
+              _showDialog();
+            }
+          });
+        },
+        child: Icon(
+          Icons.chevron_right,
+          color: Colors.white,
         ),
-      )
+      ),
     );
   }
 }
